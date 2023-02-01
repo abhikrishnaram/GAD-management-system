@@ -4,6 +4,7 @@ import com.gadms.controller.RegisterController;
 
 import java.awt.Color;
 import java.awt.Font;
+import java.io.IOException;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -80,7 +81,7 @@ public class RegisterUI extends JFrame {
         signin.setBackground(new Color(0,0,0, 0));
         signin.setFocusPainted(false);
         signin.setBorder(null);
-        signin.setBounds(90, 450, 400, 50);
+        signin.setBounds(90, 500, 400, 50);
         signin.addActionListener(actionEvent -> {
             dispose();
             new LoginUI();
@@ -89,7 +90,7 @@ public class RegisterUI extends JFrame {
 
         message = new JLabel("");
         message.setFont(new Font("Times New Roman", Font.ITALIC, 16));
-        message.setBounds(90, 420, 300, 20);
+        message.setBounds(90, 450, 300, 20);
         message.setForeground(Color.BLACK);
         log.add(message);
 

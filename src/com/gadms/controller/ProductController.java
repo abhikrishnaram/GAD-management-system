@@ -11,4 +11,5 @@ public class ProductController {
     public static Product addProduct(Product p) {
         return Product.addProduct(p);
     }
+    public static int createOrder(Product p, int quantity){ return Product.orderProduct(p, quantity); }
 }

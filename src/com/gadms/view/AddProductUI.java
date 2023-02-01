@@ -21,11 +21,6 @@ public class AddProductUI extends Page {
         new AddProductUI();
     }
 
-    Function<Void, Void> goBack() {
-        new AdminDashboardUI();
-        return null;
-    }
-
     public AddProductUI() {
         setTitle("Add Product Form");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -113,7 +108,7 @@ public class AddProductUI extends Page {
 
                 if(res.getId() != -1){
                     dispose();
-                    new ViewAssetsUI(goBack());
+                    new ViewAssetsUI();
                 } else {
                     message.setText("Creating product failed. Try again!");
                 }
@@ -121,7 +116,7 @@ public class AddProductUI extends Page {
         });
 
         add(mainPanel);
-        setVisible(true);
+        showUI();
     }
 }
 

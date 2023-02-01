@@ -153,4 +153,23 @@ public class Ticket {
         return tickets;
     }
 
+    public static boolean deleteTicket(int id){
+        Connection c = DBConnection.connect();
+        int i = 0;
+        try {
+            PreparedStatement st = c.prepareStatement("DELETE FROM ticket WHERE id=?");
+            st.setInt(1, id);
+            int affectedRows = st.executeUpdate();
+
+            st.close();
+            c.close();
+
+            return affectedRows > 0;
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            System.err.println(e.getClass().getName());
+        }
+        return false;
+    }
 }

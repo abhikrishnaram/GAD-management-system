@@ -1,8 +1,13 @@
 package com.gadms.view;
 
+import com.gadms.Global;
+import com.gadms.controller.ProductController;
 import com.gadms.controller.TicketController;
 import com.gadms.model.Ticket;
+import com.gadms.view.components.Button;
 import com.gadms.view.components.Page;
+import com.gadms.view.components.TableButton;
+import com.gadms.view.components.TableButtonListener;
 
 import java.awt.*;
 import java.awt.event.*;
@@ -21,43 +26,44 @@ public class ViewRequestsUI extends Page {
     }
 
     public ViewRequestsUI() {
-        // Create table to display requests
+        setTitle("My Tickets");
         JTable table = new JTable();
         table.setModel(new TicketTableModel());
-        // Create scroll pane to hold table
         JScrollPane scrollPane = new JScrollPane(table);
 
-        // Create header panel with heading and back button
-        JPanel header = new JPanel();
-        JButton backButton = new JButton("Back");
-        JLabel heading = new JLabel("My Requests");
-        backButton.addActionListener(new BackButtonListener());
-        header.add(backButton);
-        header.add(heading);
-
-        // Add table and header to frame
         add(scrollPane, BorderLayout.CENTER);
-        add(header, BorderLayout.NORTH);
 
-        // Add delete button to each column
-//        TableColumn deleteBtn_holder = new TableColumn();
-//        TableColumnModel columnModel = table.getColumnModel();
-//        table.addColumn(deleteBtn_holder);
-//        table.getColumnModel().getColumn(6).setHeaderValue("");
-//        table.getColumnModel().getColumn(6).setCellRenderer(new DeleteButtonRenderer());
-//        table.getColumnModel().getColumn(6).setCellEditor(new DeleteButtonEditor(new JCheckBox()));
-//        System.out.println(columnModel);
+//        Button deleteBtn = new Button("Delete Request");
 
-        // Set frame properties
-        setTitle("Ticket Requests");
-        setSize(800, 600);
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setVisible(true);
+        TableButton buttonEditor = new TableButton("Delete");
+        buttonEditor.addTableButtonListener(new TableButtonListener() {
+            @Override
+            public void tableButtonClicked(int row, int col) {
+                boolean a = TicketController.deleteTicket((int)table.getValueAt(row, 0));
+                if (a){
+                    dispose();
+                    new ViewRequestsUI();
+                }
+            }
+        });
+
+        TableColumn deleteBtn_holder = new TableColumn();
+        TableColumnModel columnModel = table.getColumnModel();
+        table.addColumn(deleteBtn_holder);
+        table.getColumnModel().getColumn(6).setHeaderValue("");
+        table.getColumnModel().getColumn(6).setCellRenderer(buttonEditor);
+        table.getColumnModel().getColumn(6).setCellEditor(buttonEditor);
+        System.out.println(columnModel);
+
+        showUI();
     }
-    // Inner class to handle back button clicks
+
     private class BackButtonListener implements ActionListener {
         public void actionPerformed(ActionEvent e) {
-            // Code to go back to previous screen
+            if (Global.user != null && Global.user.isStaff())
+                new AdminDashboardUI();
+            else
+                new UserDashboardUI();
         }
     }
 
@@ -98,11 +104,11 @@ public class ViewRequestsUI extends Page {
         final String[] titles = {"ID", "User ID", "Product ID", "Quantity", "Remark", "Status"};
         public TicketTableModel() {
             tickets = new ArrayList<Ticket>();
-            if(showAll)
+            if(Global.user != null && Global.user.isStaff())
                 tickets = TicketController.getAllTickets();
             else
                 tickets = TicketController.getTickets();
-            System.out.println(tickets);
+            System.out.println(tickets.size());
         }
         @Override
         public int getRowCount() {
@@ -126,6 +132,7 @@ public class ViewRequestsUI extends Page {
             return tickets.get(r).getColumn(c);
         }
     }
+
     private static class JTableButtonRenderer implements TableCellRenderer {
         private final TableCellRenderer defaultRenderer;
         public JTableButtonRenderer(TableCellRenderer renderer) {

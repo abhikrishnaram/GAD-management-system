@@ -12,4 +12,6 @@ public class TicketController {
     public static List<Ticket> getAllTickets() {
         return Ticket.getAllTickets();
     }
+
+    public static boolean deleteTicket(int id){ return Ticket.deleteTicket(id); }
 }

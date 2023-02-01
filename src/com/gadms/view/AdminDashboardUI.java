@@ -1,5 +1,6 @@
 package com.gadms.view;
 
+import com.gadms.view.components.Button;
 import com.gadms.view.components.Page;
 
 import java.awt.*;
@@ -13,42 +14,46 @@ public class AdminDashboardUI extends Page {
 
     public AdminDashboardUI() {
         setTitle("AssetWise - Admin Panel");
+        setLayout(new FlowLayout());
 
         JPanel mainPanel = new JPanel();
-        mainPanel.setLayout(new FlowLayout());
+        mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.Y_AXIS));
+        mainPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-        JButton viewTicketButton = new JButton("View Ticket");
+        JPanel buttonPanel = new JPanel();
+
+        JButton viewTicketButton = new Button("View Ticket");
         viewTicketButton.addActionListener(e -> {
-//                dispose();
-            new ViewRequestsUI(true);
+            this.dispose();
+            new ViewRequestsUI();
         });
-        mainPanel.add(viewTicketButton);
+        buttonPanel.add(viewTicketButton);
 
-        JButton viewProductButton = new JButton("View Product");
-        viewProductButton.setBounds(50, 50, 100, 50);
+        JButton viewProductButton = new Button("View Product");
         viewProductButton.addActionListener(e -> {
-//                dispose();
+            this.dispose();
             new ViewAssetsUI();
         });
-        mainPanel.add(viewProductButton);
+        buttonPanel.add(viewProductButton);
 
-        JButton addProductButton = new JButton("Add Product");
-        addProductButton.setBounds(50, 50, 100, 50);
+        JButton addProductButton = new Button("Add Product");
         addProductButton.addActionListener(e -> {
-//                dispose();
+            this.dispose();
             new AddProductUI();
         });
-        mainPanel.add(addProductButton);
+        buttonPanel.add(addProductButton);
 
-        JButton addStaffButton = new JButton("Add Staff");
+        JButton addStaffButton = new Button("Add GAD Staff");
         addStaffButton.addActionListener(e -> {
-//                dispose();
+            this.dispose();
             new AddStaffUI();
         });
-        mainPanel.add(addStaffButton);
+        buttonPanel.add(addStaffButton);
+
+        mainPanel.add(buttonPanel);
 
         add(mainPanel);
-        setVisible(true);
+        showUI();
     }
 }
 

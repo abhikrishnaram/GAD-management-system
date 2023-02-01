@@ -58,6 +58,17 @@ public class Product {
 
     private int totalQuantity;
 
+    public Object getColumn(int column) {
+        return switch (column) {
+            case 0 -> getId();
+            case 1 -> getName();
+            case 2 -> getPrice();
+            case 3 -> getDescription();
+            case 4 -> getTotalQuantity();
+            default -> null;
+        };
+    }
+
     public Product(int id, String name, BigDecimal price, String description, int totalQuantity) {
         this.id = id;
         this.name = name;
@@ -139,4 +150,38 @@ public class Product {
         return p;
     }
 
+    public static int orderProduct(Product p, int quantity) {
+        Connection c = DBConnection.connect();
+        String[] generatedColumns = { "id" };
+        int id = -1;
+        try {
+            PreparedStatement st = c.prepareStatement("INSERT INTO ticket(user_id, product_id, quantity, remark, status) VALUES (?,?,?,?,?);", generatedColumns);
+            st.setInt(1, Global.user.getId());
+            st.setInt(2, p.getId());
+            st.setInt(3, quantity);
+            st.setString(4, "");
+            st.setString(5, "pending");
+            int affectedRows = st.executeUpdate();
+            ResultSet rs = st.getGeneratedKeys();
+
+            if (rs.next()) {
+                if (affectedRows > 0) {
+                    id = rs.getInt(1);
+                    System.out.println("Order placed successful");
+                } else {
+                    System.out.println("Error placing order");
+                }
+            }
+
+            st.close();
+            c.close();
+
+            return id;
+        } catch (SQLException | NullPointerException e) {
+            e.printStackTrace();
+            System.err.println(e.getClass().getName());
+        }
+
+        return id;
+    }
 }
